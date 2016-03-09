@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Solar Generation Visualisation</title>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <link 
+href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' 
+rel='stylesheet' type='text/css'>
+        <style>
+      .xAxis {
+        fill: yellow;
+        stroke: orange;
+        stroke-width: 3px;
+      }
+      .xBigTick {
+        fill: none;
+        stroke: red;
+        stroke-width: 1px;
+      }
+      .xSmallTick {
+        fill: none;
+        stroke: #303030;
+        stroke-width: 0.25px;
+      }
+      .xMonthTick {
+        fill: none;
+        stroke: brown;
+        stroke-width: 4px;
+      }
+      .axisText {
+        font-family: Lato;
+        font-weight: 300;
+        font-size: 12px;
+      }
+      .button {
+        fill: silver;
+        stroke: gray;
+        stroke-width: 3px;
+      }
+
+      </style>
+    </head>
+    <body>
+    <script type="text/javascript">
+      // https://www.udacity.com/course/viewer#!/c-ud507/l-3168888599/m-3095208776
+      // Get the data
+      var data;
+      d3.json("./test.php", function(error, json) {
+	if (error) return console.warn(error);
+	data = json;
+	data.forEach(function(d) {
+	d.Timestamp = parseDate(d.Timestamp);
+	d.Power = +d.Power;
+	});
+
+	// Scale the range of the data
+	x.domain(d3.extent(data, function(d) { return d.Timestamp; }));
+	y.domain([0, d3.max(data, function(d) { return d.Power; })]);
+      });
+    </script>
+
+    <script type="text/javascript">
+      var canvasWidth= 800;
+      var canvasHeight=800;
+      var originx = canvasWidth/2;
+      var originy = canvasHeight/2;
+      var pi = Math.PI;
+      var DRratio = pi/180;
+      var degPerDay = 360/365;
+      var radPerDay = degPerDay*DRratio;
+      var bigTick = 50;
+      var smallTick = 20;
+      var graphMargin = 20;
+      var baseRad = canvasHeight/3-bigTick-graphMargin;
+      //var baseRad = 200;
+      var amplitude = 1; //for magnifying the y axis data
+      var textMargin = 25;
+      var textMargin180 = 11;
+      var angleAdjust = 1.5*DRratio;
+      var angleAdjust180 = 5*DRratio;
+      var monthAngleAdjust = 18*DRratio;
+      var monthAngle = new Array();
+      var monthLabelAngle = new Array();
+ 
+      var week = 0;
+
+      // Canvas
+      var svgContainer = d3.select("body")
+	.append("svg")
+	.attr("width", canvasWidth)
+	.attr("height", canvasHeight);
+
+      // x axis line (radial version)
+      svgContainer.append("circle")
+	.attr("cx", originx)
+	.attr("cy", originy)
+	.attr("r", baseRad)
+	.attr("class", "xAxis");
+	
+      // daily (small) tick marks
+      for (a=0; a<=2*pi; a+=(radPerDay)) {
+	var dailyLines = svgContainer.append("line")
+	  .attr("x1", originx + (baseRad * Math.cos(a)))
+	  .attr("y1", originy + (baseRad * Math.sin(a)))
+	  .attr("x2", originx + ((baseRad + smallTick) * Math.cos(a)))
+	  .attr("y2", originy + ((baseRad + smallTick) * Math.sin(a)))
+	  .attr("class", "xSmallTick");
+      };
+      
+      // Weekly y axes
+      for (a=0; a<=2*pi; a+=(radPerDay)*7) {
+	// add a group for the week label & tick, then position at origin and rotate as a whole
+	var weekGroup = svgContainer.append("g")
+	  .attr("id","WeeklyAxisGrp-"+week);
+	    
+	// add the text to the week group
+	var weekLabel = weekGroup.append("text")
+	  .text(week)
+	  .attr("id","weekNum-"+week)
+	  .attr("class", "axisText")
+	  .attr("style", "fill:black")
+	  .attr("opacity", "1");
+	  
+	weekLabel.attr("x",baseRad-textMargin)
+	  .attr("y",-5);
+	    
+	// THIS BREAKS!!
+	//adjust orientation to be more readable between 90 & 270 deg (where 0 deg is on right/East)
+// 	    if ((a > (pi/2)) && (a < (3*pi/2))){
+// 	      d3.select("#weekNum-"+week).attr("transform", "rotate(" + 180 +")");
+// 	      console.log("In group= #WeeklyAxisGrp-"+week + ", rotate text, id= #weekNum-"+week + "  by angle (deg): "+ 180);
+// 	    }
+	    
+	//Position the text in the group (don't need to worry about the group's ultimate rotation)
+
+
+	// add the weekly (big) tick marks on the y origin line (ultimate position and rotation managed by the week group)
+	var weekLine = weekGroup.append("line")
+	  .attr("id", "weekY-"+week)
+	  .attr("x1", baseRad-textMargin)
+	  .attr("y1", 0)
+	  .attr("x2", baseRad + bigTick)
+	  .attr("y2", 0)
+	  .attr("class", "xBigTick");
+
+	weekGroup.attr("transform", "translate(" + (originx) + "," + (originy) + ") rotate(" + (a/DRratio) +")");
+	week=week+1;
+      };
+
+      // month label constants
+      var inrad = 100;
+      var outrad = baseRad - textMargin;
+      var month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var months= [31,28,31,30,31,30,31,31,30,31,30,31];
+      //work out the cumulative angles per month's tick line
+      //first month
+      monthAngle[0]= months[0]*degPerDay;
+      //and the demi-angle offset for the label
+      monthLabelAngle[0]= (months[0]*degPerDay)/2;
+      //subsequent months
+      for (m=1; m<=11; m++) {
+	monthAngle[m]= monthAngle[m-1] + months[m]*degPerDay;
+	monthLabelAngle[m]= months[m]*degPerDay/2;
+      }
+
+      // monthly (inner) lead lines
+      for (m=0; m<=11; m+=1) {
+	// add a group for the month label & tick, then position at origin an d rotate as a whole
+	var MonthGroup = svgContainer.append("g")
+	  .attr("id","monthlyAxisGrp-"+m); 
+	    
+	var MonthTickLine = MonthGroup.append("line")
+	  .attr("x1", inrad)
+	  .attr("y1", 0)
+	  .attr("x2", outrad)
+	  .attr("y2", 0)
+	  .attr("opacity", "0.5")
+	  .attr("stroke-linecap", "round")
+	  .attr("class", "xMonthTick");
+	
+	var MonthLabelText = MonthGroup.append("text")
+	  .attr("id", "month-text-" + m)
+	  .attr("class", "axisText")
+	  .attr("style", "fill:black")
+	  .attr("opacity", "1")
+	  .text(month[m]);
+	  
+	MonthLabelText.attr("transform", "rotate(" + (monthLabelAngle[m])*-1 +") translate(" + baseRad/2 + ", " + 0 + ")");
+
+	MonthGroup.attr("transform", "translate(" + (originx) + "," + (originy) + ") rotate(" + (monthAngle[m]) +")");
+	//console.log(months+" - "+monthAngle+" - "+monthLabelAngle);
+      };
+
+
+
+      //control handle (move to adjust amplitude)
+      svgContainer.append("circle")
+	  .attr("cx", originx)
+	  .attr("cy", originy)
+	  .attr("r", 10)
+	  .attr("class", "button");
+
+        </script>
+    </body>
+</html>
