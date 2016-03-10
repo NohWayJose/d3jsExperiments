@@ -46,7 +46,7 @@ rel='stylesheet' type='text/css'>
       // https://www.udacity.com/course/viewer#!/c-ud507/l-3168888599/m-3095208776
       // Get the data
       var data;
-      d3.json("./solarData.json", function(data) {
+      d3.json("solarData.json", function(data) {
   	console.log(data[0]);
   	data.forEach(function(d) {
 		d.Timestamp = parseDate(d.Timestamp);
