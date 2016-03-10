@@ -18,5 +18,10 @@ This code aims to do the following
 
 7/ Oversample on the X-Axis, compared to the default for a selected zoom level (twice or four times oversample, for example)
 
+8/ The graph is meant to be driven from a Maria (MySQL) DB which contains a datapoint for every ten minutes of daylight for the last four years. I wonder how I can query data from it quickly. Do stored procedures allow the dynamic creation & update of temporary tables, to cache data at different granularities, a bit like RRD Tool?
+
 I have used d3js to create a circular X-Axis graph with days, weeks & months on the X-Axis and kWh on the Y-Axis
 (it's not a radar chart, it's a polar plot). Each year should be a different trace
+
+Preview of the dataless chart: http://htmlpreview.github.io/?https://github.com/NohWayJose/d3jsExperiments/blob/master/SolarPower-v00.01.html
+Preview of the range slider: http://htmlpreview.github.io/?https://github.com/NohWayJose/d3jsExperiments/blob/master/scopeWidget00.01.html
