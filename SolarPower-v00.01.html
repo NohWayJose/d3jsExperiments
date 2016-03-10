@@ -46,14 +46,22 @@ rel='stylesheet' type='text/css'>
       // https://www.udacity.com/course/viewer#!/c-ud507/l-3168888599/m-3095208776
       // Get the data
       var data;
-      d3.json("./test.php", function(error, json) {
+      d3.json("./solarData.json", function(data) {
+  	console.log(data[0]);
+  	data.forEach(function(d) {
+		d.Timestamp = parseDate(d.Timestamp);
+		d.Power = +d.Power;
+		console.log(d)
+  		};
+	});
+/*      d3.json("./test.php", function(error, json) {
 	if (error) return console.warn(error);
 	data = json;
 	data.forEach(function(d) {
 	d.Timestamp = parseDate(d.Timestamp);
 	d.Power = +d.Power;
 	});
-
+*/
 	// Scale the range of the data
 	x.domain(d3.extent(data, function(d) { return d.Timestamp; }));
 	y.domain([0, d3.max(data, function(d) { return d.Power; })]);
