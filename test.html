@@ -62,8 +62,8 @@ var svg = d3.select("body")
 // Get the data
 d3.csv("solarData.csv", function(error, data) {
     data.forEach(function(d) {
-        d.date = parseDate(d.date);
-        d.close = +d.close;
+        d.DT = parseDate(d.DT);
+        d.PWR = +d.PWR;
     });
 
     // Scale the range of the data
