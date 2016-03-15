@@ -47,8 +47,8 @@ var yAxis = d3.svg.axis().scale(y)
 
 // Define the line
 var valueline = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.close); });
+        .x(function(d) { return x(d.DT); })
+    .y(function(d) { return y(d.PWR); });
     
 // Adds the svg canvas
 var svg = d3.select("body")
