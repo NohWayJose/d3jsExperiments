@@ -10,11 +10,13 @@ This sample code aims to do the following
 
 3/ At maximum zoom, see ten minute data resolution
 
-4/ At minimum zoom (1 year), see data averaged for 1 day (not sure of the utility of this)
+4/ At minimum zoom (1 year), see data averaged for 1 day
 
-5/ At intermediate zooms use an appropriate granularity of data to allow it to remain responsive and yet representative
+5/ At intermediate zooms use an appropriate granularity of data to allow it to remain responsive and yet representative.
 
-6/ Vary the Y-axis amplitude on-demand
+5b/ For the range shown there are cases where it might be worth seeing average, min, max & standard deviation (on demand) but exagerating the amplitude is likely to be necessary too. (see 6/)
+
+6/ Vary the Y-axis amplitude on-demand (on my prototype this is an expandable dot in the centre of the graph - not yet functional)
 
 7/ Explore oversampling on the X-Axis, compared to the default for a selected zoom level (twice or four times oversample, for example) - not sure what utility this might offer
 
