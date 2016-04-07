@@ -57,7 +57,7 @@
             
             if (x2 <= 0) {x2 = 0};
             if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
-             
+            if (x1 >= (scopewidth - startdatewidth - 8)) {x1 = (scopewidth - startdatewidth - 8)};              
             if (x2 > (x1 + startdatewidth + startdateheight + 13)) {t2 = 13};
             if (x2 <= (x1 + startdatewidth + startdateheight + 13)) {t2 = (x1 + startdatewidth + startdateheight + 26 - x2)};
             if (t2 >= (startdateheight + 26)) {t2 = (startdateheight + 26)};
@@ -100,7 +100,7 @@
             
             if (x2 <= 0) {x2 = 0};
             if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
-             
+            if (x1 >= (scopewidth - startdatewidth - 8)) {x1 = (scopewidth - startdatewidth - 8)};              
             if (x2 > (x1 + startdatewidth + startdateheight + 13)) {t2 = 13};
             if (x2 <= (x1 + startdatewidth + startdateheight + 13)) {t2 = (x1 + startdatewidth + startdateheight + 26 - x2)};
             if (t2 >= (startdateheight + 26)) {t2 = (startdateheight + 26)};
