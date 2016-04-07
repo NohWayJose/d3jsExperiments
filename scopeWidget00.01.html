@@ -4,51 +4,69 @@
     <meta charset="UTF-8"/>
     <title>jQuery Solar Data graph handler</title>
     <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="SDvizStyle3.css">
     <script>
-
      var DBearliestDate = getDBearliestDate();
      var DBlatestDate = getDBlatestDate();
-
+     const MS_PER_YEAR = 31.536e9; //number of milliseconds in a non-leap-year
+     const MONTHS = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+     
     $(document).ready(function(){
       // fade up the graph area background
       $('#SDviz').hide();
       $('#SDviz').fadeIn(2000);
+
     });
     
     $("#SDvalueSetter").mousedown(function() {
         //bind event
       });    
-
     $("#SDvalueSetter").mouseup(function() {
         //un-bind event
       });
       
-
       $(function() {
       $( "#SDvalueSetter" ).resizable({
 	handles: "e, w",
 	containment: "#SDscope",
 	resize: function() {
             var $this = $(this);
-            var thisPos = $this.position();
-            var width = $this.width();
-            //var scopewidth = $("#SDscope").parent().width;
-            //alert(scopewidth);
-            var parentPos = $this.parent().position();
-            var x1 = thisPos.left - parentPos.left;
-            //console.log(scopewidth);
-            //if (x1 >= scopewidth - 80 ) {x1 = scopewidth - 80}
-            var x2 = thisPos.left - parentPos.left + width - 80;
+            var thisPos = parseInt($this.position().left);
+            var width = parseInt($this.width());
+            var scopewidth = parseInt($this.parent().width());
+
+            var x1 = thisPos;
+            var x1p =(x1/scopewidth*100).toFixed(2); //percentage progress of start date
+            var x2 = (thisPos + width);
+            var x2p = (x2/scopewidth*100).toFixed(2);
+            var scopep = ((x2 - x1)/scopewidth*100).toFixed(2); //percentage progress of end date
+            
+            var startdatewidth = $("#startDate").width();
+            var startdateheight = $("#startDate").height();
+            var enddatewidth = $("#endDate").width();
+            
+            //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%");
+           
+            $( "#startMonth" ).html(index2Month(x1p));
+            $( "#startDay" ).html(index2DayOfMonth(x1p));
+            $( "#endMonth" ).html(index2Month(x2p));
+            $( "#endDay" ).html(index2DayOfMonth(x2p));
+            
             if (x2 <= 0) {x2 = 0};
-            $( "#startDate" ).text("start:" + x1);
-            $( "#endDate" ).text(" to end: " + x2);
+            if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
+             
+            if (x2 > (x1 + startdatewidth + startdateheight + 13)) {t2 = 13};
+            if (x2 <= (x1 + startdatewidth + startdateheight + 13)) {t2 = (x1 + startdatewidth + startdateheight + 26 - x2)};
+            if (t2 >= (startdateheight + 26)) {t2 = (startdateheight + 26)};
+            
             $( "#startDate" ).parent().css({ position:'relative' });
             $( "#startDate" ).css({left: x1, position:'absolute' });
             $( "#endDate" ).parent().css({ position:'relative' });
             $( "#endDate" ).css({left: x2, position:'absolute' });
+            $( "#endDate" ).css({top: t2, position:'relative' });
         }
       });
     });
@@ -59,36 +77,58 @@
 	containment: "#SDscope",
 	drag: function() {
             var $this = $(this);
-            var thisPos = $this.position();
-            var width = $this.width();
-            //var scopewidth = $this.parent().width;
-            var parentPos = $this.parent().position();
-            var x1 = thisPos.left - parentPos.left;
-            //console.log(scopewidth);
-            //if (x1 >= scopewidth - 80 ) {x1 = scopewidth - 80}
-            var x2 = thisPos.left - parentPos.left + width - 80;
+            var thisPos = parseInt($this.position().left);
+            var width = parseInt($this.width());
+            var scopewidth = parseInt($this.parent().width());
+
+            var x1 = thisPos;
+            var x1p =(x1/scopewidth*100).toFixed(2); //percentage progress of start date
+            var x2 = (thisPos + width);
+            var x2p = (x2/scopewidth*100).toFixed(2);
+            var scopep = ((x2 - x1)/scopewidth*100).toFixed(2); //percentage progress of end date
+            
+            var startdatewidth = $("#startDate").width();
+            var startdateheight = $("#startDate").height();
+            var enddatewidth = $("#endDate").width();
+            
+            //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%");
+           
+            $( "#startMonth" ).html(index2Month(x1p));
+            $( "#startDay" ).html(index2DayOfMonth(x1p));
+            $( "#endMonth" ).html(index2Month(x2p));
+            $( "#endDay" ).html(index2DayOfMonth(x2p));
+            
             if (x2 <= 0) {x2 = 0};
-            $( "#startDate" ).text("start:" + x1);
-            $( "#endDate" ).text(" to end: " + x2);
+            if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
+             
+            if (x2 > (x1 + startdatewidth + startdateheight + 13)) {t2 = 13};
+            if (x2 <= (x1 + startdatewidth + startdateheight + 13)) {t2 = (x1 + startdatewidth + startdateheight + 26 - x2)};
+            if (t2 >= (startdateheight + 26)) {t2 = (startdateheight + 26)};
+            
             $( "#startDate" ).parent().css({ position:'relative' });
             $( "#startDate" ).css({left: x1, position:'absolute' });
             $( "#endDate" ).parent().css({ position:'relative' });
             $( "#endDate" ).css({left: x2, position:'absolute' });
+            $( "#endDate" ).css({top: t2, position:'relative' });
         }
       });
     });
     
     
-    function index2dateTime(index){
-      //find the database's start timestamp & last record timestamp (extent)
-      //find the pixel width of the SDscope (=100%)
-      //find proportion of index to SDscope.width and
-      //use proportion to calculate and return the timestamp for that 
-      //proportion along the database timeline extent
-      // MAKE SURE THE TIMESTAMP IS MYSQL SQL COMPATIBLE
-       //use global variables DBearliestDate & DBlatestDate
-      //timestamp = blah;
-      return timestamp;
+    function index2DayOfMonth(progress){
+      var p = progress/100; //if the width of the grey bar represents one year, then progress is the proportion of a year to show (the year value is unimportant & leapyears don't figure)
+      var ms = parseInt(MS_PER_YEAR*p); //convert proportion to an equivalent number of milliseconds since the start of the year (midnight  on 1st Jan 1970)
+      var d = new Date(ms); //create a date object for that point in the year
+      var D = d.getUTCDate(); //return the day of the month
+      return D;
+    }
+    
+    function index2Month(progress){
+      var p = progress/100; //if the width of the grey bar represents one year, then progress is the proportion of a year to show (the year value is unimportant & leapyears don't figure)
+      var ms = parseInt(MS_PER_YEAR*p); //convert proportion to an equivalent number of milliseconds since the start of the year (midnight  on 1st Jan 1970)
+      var d = new Date(ms); //create a date object for that point in the year
+      var M = d.getUTCMonth(); //return the month
+      return MONTHS[M];
     }
 
     function getDBearliestDate(){
@@ -113,9 +153,15 @@
   <body>
     <div id='SDviz'></div>
     <div id='SDscope'>
-      <div id='SDvalueSetter' class='date'></div>
-      <div id='startDate' class='date'>2016-01-04 22:40</div>
-      <div id='endDate' class='date'>2016-01-04 22:40</div>
+      <div id='SDvalueSetter'></div>
+      <div id='startDate' class='date'>
+	<div id='startMonth'>Jan</div>
+	<div id='startDay'>31</div>
+      </div>
+      <div id='endDate' class='date'>
+	<div id='endMonth'>Feb</div>
+	<div id='endDay'>29</div>
+      </div>
     </div>
   </body>
 </html>
