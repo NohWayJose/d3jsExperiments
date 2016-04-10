@@ -5,21 +5,49 @@
     <title>jQuery Solar Data graph handler</title>
     <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' 
+rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="SDvizStyle3.css">
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    
     <script>
-     var DBearliestDate = getDBearliestDate();
-     var DBlatestDate = getDBlatestDate();
-     const MS_PER_YEAR = 31.536e9; //number of milliseconds in a non-leap-year
-     const MONTHS = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+    var canvasheight = 800;
+    var canvaswidth = 1500;
+    var sx = canvaswidth*0.2;
+    var sy = 600;
+    var ex = canvaswidth*0.2;
+    var ey = 0;
+    
+    //these are arbitrary starting values
+    var xval = (ex-sx)*canvasheight;
+    var yval = (ex-sx)*canvasheight;     
+    
+    var DBearliestDate = getDBearliestDate();
+    var DBlatestDate = getDBlatestDate();
+    const MS_PER_YEAR = 31.536e9; //number of milliseconds in a non-leap-year
+    const MONTHS = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
      
     $(document).ready(function(){
       // fade up the graph area background
       $('#SDviz').hide();
       $('#SDviz').fadeIn(2000);
+      
+      // Canvas
+      var svgContainer = d3.select('body').append('svg')
+	      .attr('id', 'svgContainer')
+	      .attr('height', canvasheight)
+	      .attr('width', canvaswidth);
 
+	      // Curve
+      var curve = svgContainer.append('path')        
+	      .attr('id', "curve")
+	      .attr('d', "M 500,500 a"+xval+","+yval+" 0 0,1 500,0")
+	      .attr('style', "fill:none; stroke:red; stroke-width:6");
     });
+    
+    //$( "#svgContainer" ).left(50%);
     
     $("#SDvalueSetter").mousedown(function() {
         //bind event
@@ -48,12 +76,17 @@
             var startdateheight = $("#startDate").height();
             var enddatewidth = $("#endDate").width();
             
-            //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%");
+            yval = parseInt(scopewidth - (scopep*20));
+            
+            $( "#curve" ).attr('d', "M " + sx + "," + sy + " a" + xval + "," + yval + " 0 0,1 " + ex + "," + ey);
+            
+            //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%          scope = " + yval);
            
             $( "#startMonth" ).html(index2Month(x1p));
             $( "#startDay" ).html(index2DayOfMonth(x1p));
             $( "#endMonth" ).html(index2Month(x2p));
             $( "#endDay" ).html(index2DayOfMonth(x2p));
+            
             
             if (x2 <= 0) {x2 = 0};
             if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
@@ -67,6 +100,7 @@
             $( "#endDate" ).parent().css({ position:'relative' });
             $( "#endDate" ).css({left: x2, position:'absolute' });
             $( "#endDate" ).css({top: t2, position:'relative' });
+            
         }
       });
     });
