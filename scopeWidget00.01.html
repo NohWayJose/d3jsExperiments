@@ -17,7 +17,7 @@ rel='stylesheet' type='text/css'>
     var canvaswidth = 1500;
     var sx = canvaswidth*0.2;
     var sy = 600;
-    var ex = canvaswidth*0.2;
+    var ex = canvaswidth*0.4;
     var ey = 0;
     
     //these are arbitrary starting values
@@ -78,7 +78,7 @@ rel='stylesheet' type='text/css'>
             
             yval = parseInt(scopewidth - (scopep*20));
             
-            $( "#curve" ).attr('d', "M " + sx + "," + sy + " a" + xval + "," + yval + " 0 0,1 " + ex + "," + ey);
+            $( "#curve" ).attr('d', "M " + sx + "," + sy + " a" + yval + "," + yval + " 0 0,1 " + ex + "," + ey);
             
             //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%          scope = " + yval);
            
