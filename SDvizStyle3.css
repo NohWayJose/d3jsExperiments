@@ -43,12 +43,12 @@ body {
 }
 
 #startDate {
-left:		calc(50% - 90px);
+  left:		calc(50% - 90px);
   top: 		13px;
 }
 
 #endDate {
-left:		calc(50% + 10px);
+  left:		calc(50% + 10px);
   top: 		13px;
 }
 
