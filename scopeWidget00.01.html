@@ -76,11 +76,11 @@ rel='stylesheet' type='text/css'>
             var startdateheight = $("#startDate").height();
             var enddatewidth = $("#endDate").width();
             
-            yval = parseInt(scopewidth - (scopep*20));
+            yval = parseInt(scopewidth - (scopep*30));
             
             $( "#curve" ).attr('d', "M " + sx + "," + sy + " a" + yval + "," + yval + " 0 0,1 " + ex + "," + ey);
             
-            //console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%          scope = " + yval);
+            console.log("X1 = " + x1p + "%          X2 = " + x2p + "%          scope = " + scopep + "%          scope = " + yval);
            
             $( "#startMonth" ).html(index2Month(x1p));
             $( "#startDay" ).html(index2DayOfMonth(x1p));
