@@ -97,9 +97,9 @@ rel='stylesheet' type='text/css'>
       // Canvas
       var svgContainer = d3.select("body")
 	.append("svg")
+	.attr("viewbox", viewboxStr)
 	.attr("width", canvasWidth)
-	.attr("height", canvasHeight)
-	.attr("viewbox",viewboxStr);
+	.attr("height", canvasHeight);
 
       // x axis line (radial version)
       svgContainer.append("circle")
