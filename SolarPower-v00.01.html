@@ -90,6 +90,7 @@ rel='stylesheet' type='text/css'>
       var monthAngleAdjust = 18*DRratio;
       var monthAngle = new Array();
       var monthLabelAngle = new Array();
+      var viewboxStr = "100 100 500 500";
  
       var week = 0;
 
@@ -97,7 +98,8 @@ rel='stylesheet' type='text/css'>
       var svgContainer = d3.select("body")
 	.append("svg")
 	.attr("width", canvasWidth)
-	.attr("height", canvasHeight);
+	.attr("height", canvasHeight)
+	.attr)"viewport",viewboxStr);
 
       // x axis line (radial version)
       svgContainer.append("circle")
