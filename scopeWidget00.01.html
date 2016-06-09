@@ -131,8 +131,8 @@ rel='stylesheet' type='text/css'>
             $( "#startDay" ).html(index2DayOfMonth(x1p));
             $( "#endMonth" ).html(index2Month(x2p));
             $( "#endDay" ).html(index2DayOfMonth(x2p));
-            $( "#SDscopeVal" ).html(x2p);
-            $( "#SDscopeStartVal" ).html(x1);
+            $( "#SDscopeVal" ).html('period covered' + x2p);
+            $( "#SDscopeStartVal" ).html('start of period covered' + x1);
             
             if (x2 <= 0) {x2 = 0};
             if (x2 >= (scopewidth - enddatewidth - 8)) {x2 = (scopewidth - enddatewidth - 8)}; 
