@@ -29,6 +29,28 @@ body {
   margin:	0px;
 }
 
+#SDscopeVal {
+  position:	absolute;
+  top: 		10px;
+  left:		33%;
+  width:	100px;
+  height:	20px;
+  background:	#303030;
+  opacity:	1;
+  margin:	0px;
+}
+
+#SDscopeStartVal {
+  position:	absolute;
+  top: 		10px;
+  left:		66%;
+  width:	100px;
+  height:	20px;
+  background:	#303030;
+  opacity:	1;
+  margin:	0px;
+}
+
 #SDvalueSetter {
   position:	absolute;
   top: 		0px;
